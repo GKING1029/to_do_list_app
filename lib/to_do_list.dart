@@ -125,69 +125,53 @@ class _ToDoListState extends State<ToDoList> {
                             showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: const Text("Remove Task"),
-                                    actions: [
-                                      OutlinedButton(
-                                        onPressed: () {
-                                          list.removeAt(index);
+                                  return StatefulBuilder(builder:
+                                      (BuildContext context,
+                                          StateSetter setState) {
+                                    return AlertDialog(
+                                      title: const Text("Add Item"),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () async {
+                                              var returnValue =
+                                                  await showDatePicker(
+                                                      context: context,
+                                                      firstDate: DateTime.now(),
+                                                      lastDate: DateTime(2030));
+                                              selectedDate =
+                                                  returnValue.toString();
+                                              setState(() {});
+                                            },
+                                            child: Text("$selectedDate"),
+                                          ),
+                                          TextField(
+                                            controller: dateEditingController,
+                                            decoration: const InputDecoration(
+                                                hintText: "Enter task "),
+                                          )
+                                        ],
+                                      ),
+                                      actions: [
+                                        OutlinedButton(
+                                            onPressed: () {
+                                              if (dateEditingController.text
+                                                  .toString()
+                                                  .isNotEmpty) {
+                                                list.add(ToDoModel(
+                                                    "$selectedDate",
+                                                    dateEditingController.text
+                                                        .toString()));
 
-                                          Navigator.of(context).pop();
-                                          setState(() {});
-                                        },
-                                        child: const Text("Delete Task"),
-                                      )
-                                    ],
-                                  );
-                                });
-                          },
-                          onTap: () {
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: const Text("Update Item"),
-                                    content: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () async {
-                                            var returnValue =
-                                                await showDatePicker(
-                                                    context: context,
-                                                    firstDate: DateTime.now(),
-                                                    lastDate: DateTime(2030));
-                                            selectedDate =
-                                                returnValue.toString();
-                                            setState(() {});
-                                          },
-                                          child: Text("$selectedDate"),
-                                        ),
-                                        TextField(
-                                          controller: dateEditingController,
-                                          decoration: const InputDecoration(
-                                              hintText: "Enter task "),
-                                        )
+                                                Navigator.of(context).pop();
+                                                setState(() {});
+                                              }
+                                            },
+                                            child: const Text("Add Task"))
                                       ],
-                                    ),
-                                    actions: [
-                                      OutlinedButton(
-                                        onPressed: () {
-                                          if (dateEditingController.text
-                                              .toString()
-                                              .isNotEmpty) {
-                                            list[index].date = "$selectedDate";
-                                            list[index].task =
-                                                dateEditingController.text
-                                                    .toString();
-                                            Navigator.of(context).pop();
-                                            setState(() {});
-                                          }
-                                        },
-                                        child: const Text("Update Task"),
-                                      )
-                                    ],
-                                  );
+                                    );
+                                  });
                                 });
                             setState(() {});
                           },
