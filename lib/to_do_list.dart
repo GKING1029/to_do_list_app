@@ -125,11 +125,31 @@ class _ToDoListState extends State<ToDoList> {
                             showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text("Remove Task"),
+                                    actions: [
+                                      OutlinedButton(
+                                        onPressed: () {
+                                          list.removeAt(index);
+
+                                          Navigator.of(context).pop();
+                                          setState(() {});
+                                        },
+                                        child: const Text("Delete Task"),
+                                      )
+                                    ],
+                                  );
+                                });
+                          },
+                          onTap: () {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
                                   return StatefulBuilder(builder:
                                       (BuildContext context,
                                           StateSetter setState) {
                                     return AlertDialog(
-                                      title: const Text("Add Item"),
+                                      title: const Text("Update Item"),
                                       content: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
@@ -155,20 +175,21 @@ class _ToDoListState extends State<ToDoList> {
                                       ),
                                       actions: [
                                         OutlinedButton(
-                                            onPressed: () {
-                                              if (dateEditingController.text
-                                                  .toString()
-                                                  .isNotEmpty) {
-                                                list.add(ToDoModel(
-                                                    "$selectedDate",
-                                                    dateEditingController.text
-                                                        .toString()));
-
-                                                Navigator.of(context).pop();
-                                                setState(() {});
-                                              }
-                                            },
-                                            child: const Text("Add Task"))
+                                          onPressed: () {
+                                            if (dateEditingController.text
+                                                .toString()
+                                                .isNotEmpty) {
+                                              list[index].date =
+                                                  "$selectedDate";
+                                              list[index].task =
+                                                  dateEditingController.text
+                                                      .toString();
+                                              Navigator.of(context).pop();
+                                              setState(() {});
+                                            }
+                                          },
+                                          child: const Text("Update Task"),
+                                        )
                                       ],
                                     );
                                   });
